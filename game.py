@@ -10,30 +10,46 @@ class Game:
 
     def run(self):
         print("Connect Four — you are X.")
+
         while True:
             self.board.print()
+
             if self.turn == "X":
                 raw = input("Column (1-7), or q: ").strip().lower()
+
                 if raw == "q":
                     return
+
                 try:
                     col = int(raw) - 1
                 except ValueError:
                     print("Enter a column number.")
                     continue
+
+                if not 0 <= col < 7:
+                    print("Column unavailable.")
+                    continue
+
             else:
                 col = self.ai.choose_column(self.board)
 
-            if col is None or self.board.drop(col, self.turn) is None:
+                if col is None:
+                    print("No legal moves available.")
+                    if self.board.full():
+                        self.board.print()
+                        print("Draw.")
+                        return
+                    continue
+
+            if self.board.drop(col, self.turn) is None:
                 print("Column unavailable.")
-                if self.turn == "O":
-                    return
                 continue
 
             if self.board.winner(self.turn):
                 self.board.print()
                 print(self.turn, "wins!")
                 return
+
             if self.board.full():
                 self.board.print()
                 print("Draw.")
