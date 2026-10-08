@@ -35,24 +35,35 @@ class Game:
 
                 if col is None:
                     print("No legal moves available.")
+
                     if self.board.full():
                         self.board.print()
                         print("Draw.")
                         return
+
                     continue
 
-            if self.board.drop(col, self.turn) is None:
+            # Place the actual move
+            row = self.board.drop(col, self.turn)
+
+            if row is None:
                 print("Column unavailable.")
                 continue
 
+            # Task 4: move-level feedback
+            print(self.turn, "played column", col + 1)
+
+            # Check for a winner
             if self.board.winner(self.turn):
                 self.board.print()
                 print(self.turn, "wins!")
                 return
 
+            # Check for a draw
             if self.board.full():
                 self.board.print()
                 print("Draw.")
                 return
 
+            # Switch turns
             self.turn = "O" if self.turn == "X" else "X"
